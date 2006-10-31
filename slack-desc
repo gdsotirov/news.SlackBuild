@@ -1,0 +1,11 @@
+newt: newt (semi-graphical interface development kit)
+newt:
+newt: Newt is a programming library for color text mode, widget based user
+newt: interfaces.  Newt can be used to add stacked windows, entry widgets,
+newt: checkboxes, radio buttons, labels, plain text fields, scrollbars,
+newt: etc., to text mode user interfaces.  This package also contains the
+newt: shared library needed by programs built with newt, as well as a
+newt: /usr/bin/dialog replacement called whiptail.  Newt is based on the
+newt: slang library.
+newt:
+newt: Packaged by Georgi D. Sotirov <gdsotirov@dir.bg>
