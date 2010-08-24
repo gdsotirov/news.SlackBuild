@@ -1,4 +1,4 @@
-glibc-solibs >= 2.9
+glibc-solibs >= 2.11.1
 popt >= 1.7
-slang >= 2.1.4
+slang >= 2.2.2
 tcl >= 8.5
