@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Slackware build script for Newt
-# Copyright (C) 2006,2009,2010,2012 Georgi D. Sotirov <gdsotirov@dir.bg>
+# Copyright (C) 2006-2014 Georgi D. Sotirov <gdsotirov@dir.bg>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -19,15 +19,15 @@
 #
 # Visit SlackPack at http://sotirov-bg.net/slackpack/
 #
-# $Id: newt.SlackBuild,v 1.5 2012/10/06 13:55:52 gsotirov Exp $
+# $Id: newt.SlackBuild,v 1.6 2016/10/31 12:27:26 gsotirov Exp $
 #
 
 . ../../slack-package.conf
 
 NAME=newt
-VERSION=0.52.14
-BUILD=${BUILD:-1}
+VERSION=0.52.16
 ARCH=${ARCH:-i486}
+BUILD=${BUILD:-1}
 
 TMP=${TMP:-/tmp}
 CWD=${CWD:-`pwd`}
@@ -57,8 +57,9 @@ cd $SRC
 fix_source
 
 # Apply patches
-patch -p1 < $CWD/$NAME-$VERSION.diff || exit 4
-patch -p1 < $CWD/$NAME-$VERSION-tutorial.diff || exit 4
+if [ -e $CWD/$NAME-$VERSION.diff ]; then
+  patch -p1 -b -z.orig < $CWD/$NAME-$VERSION.diff || exit 4
+fi
 
 CFLAGS=$SLKCFLAGS \
 CXXFLAGS=$SLKCFLAGS  \
@@ -94,10 +95,12 @@ install -m 644 $CWD/slack-suggests $PKG/install/slack-suggests
 
 SBDIR=$PKG/usr/src/slackbuilds/$NAME-$VERSION
 mkdir -p $SBDIR
-install -m 644 $CWD/${NAME}-${VERSION}*.diff  $SBDIR
 install -m 644 $CWD/slack-desc                $SBDIR/slack-desc
 install -m 644 $CWD/slack-required            $SBDIR/slack-required
 install -m 644 $CWD/slack-suggests            $SBDIR/slack-suggests
+if [ -e $CWD/$NAME-$VERSION.diff ]; then
+  install -m 644 $CWD/${NAME}-${VERSION}*.diff $SBDIR
+fi
 install -m 644 $CWD/$NAME.SlackBuild          $SBDIR/$NAME.SlackBuild
 
 # Assemble
