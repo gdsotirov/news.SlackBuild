@@ -1,31 +1,31 @@
 # Patch to add whiptcl.so to all target, fix TCL result string, use -fPIC for snackmodule and fix linuxdoc tutorial
-diff -urNad newt-0.52.16-orig/Makefile.in newt-0.52.16/Makefile.in
---- newt-0.52.16-orig/Makefile.in	2013-08-06 18:46:42.000000000 +0300
-+++ newt-0.52.16/Makefile.in	2016-10-31 13:52:13.000000000 +0200
+diff -urNad newt-0.52.18-orig/Makefile.in newt-0.52.18/Makefile.in
+--- newt-0.52.18-orig/Makefile.in	2014-10-23 11:34:37.000000000 +0300
++++ newt-0.52.18/Makefile.in	2016-10-31 14:59:57.000000000 +0200
 @@ -65,7 +65,7 @@
  TARGET=depend $(PROGS)
  endif
  
--all:	$(TARGET) _snackmodule.$(SOEXT)
-+all:	$(TARGET) _snackmodule.$(SOEXT) whiptcl.$(SOEXT)
+-all:	$(TARGET) _snack.$(SOEXT)
++all:	$(TARGET) _snack.$(SOEXT) whiptcl.$(SOEXT)
  
  test:	test.o $(LIBNEWT)
  	$(CC) -g -o test test.o $(LIBNEWT) $(LDFLAGS) $(LIBS)
 @@ -96,9 +96,9 @@
  		PLDFLAGS=`$$pyconfig --ldflags`; \
  		PLFLAGS=`$$pyconfig --libs`; \
- 		echo $(CC) $(SHCFLAGS) $(CPPFLAGS) $$PIFLAGS $$PCFLAGS -c -o $$ver/snackmodule.o snackmodule.c; \
--		$(CC) $(SHCFLAGS) $(CPPFLAGS) $$PIFLAGS $$PCFLAGS -c -o $$ver/snackmodule.o snackmodule.c; \
-+		$(CC) $(SHCFLAGS) $(CPPFLAGS) $$PIFLAGS $$PCFLAGS -fPIC -c -o $$ver/snackmodule.o snackmodule.c; \
- 		echo $(CC) --shared $$PLDFLAGS $$PLFLAGS $(LDFLAGS) -o $$ver/_snackmodule.$(SOEXT) $$ver/snackmodule.o -L.  -lnewt $(LIBS); \
--		$(CC) --shared $$PLDFLAGS $$PLFLAGS $(LDFLAGS) -o $$ver/_snackmodule.$(SOEXT) $$ver/snackmodule.o -L.  -lnewt $(LIBS); \
-+		$(CC) --shared -fPIC $$PLDFLAGS $$PLFLAGS $(LDFLAGS) -o $$ver/_snackmodule.$(SOEXT) $$ver/snackmodule.o -L.  -lnewt $(LIBS); \
+ 		echo $(CC) $(SHCFLAGS) $(CPPFLAGS) $$PIFLAGS $$PCFLAGS -c -o $$ver/snack.o snack.c; \
+-		$(CC) $(SHCFLAGS) $(CPPFLAGS) $$PIFLAGS $$PCFLAGS -c -o $$ver/snack.o snack.c; \
++		$(CC) $(SHCFLAGS) $(CPPFLAGS) $$PIFLAGS $$PCFLAGS -fPIC -c -o $$ver/snack.o snack.c; \
+ 		echo $(CC) --shared $$PLDFLAGS $$PLFLAGS $(LDFLAGS) -o $$ver/_snack.$(SOEXT) $$ver/snack.o -L.  -lnewt $(LIBS); \
+-		$(CC) --shared $$PLDFLAGS $$PLFLAGS $(LDFLAGS) -o $$ver/_snack.$(SOEXT) $$ver/snack.o -L.  -lnewt $(LIBS); \
++		$(CC) --shared -fPIC $$PLDFLAGS $$PLFLAGS $(LDFLAGS) -o $$ver/_snack.$(SOEXT) $$ver/snack.o -L.  -lnewt $(LIBS); \
  	done || :
  	touch $@
  
-diff -urNad newt-0.52.16-orig/tutorial.sgml newt-0.52.16/tutorial.sgml
---- newt-0.52.16-orig/tutorial.sgml	2013-08-06 18:46:42.000000000 +0300
-+++ newt-0.52.16/tutorial.sgml	2016-10-31 13:49:12.000000000 +0200
+diff -urNad newt-0.52.18-orig/tutorial.sgml newt-0.52.18/tutorial.sgml
+--- newt-0.52.18-orig/tutorial.sgml	2014-10-23 11:34:37.000000000 +0300
++++ newt-0.52.18/tutorial.sgml	2016-10-31 14:58:28.000000000 +0200
 @@ -1,124 +1,116 @@
 -<!DOCTYPE Article PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
 +<!doctype linuxdoc system>
@@ -1917,9 +1917,9 @@ diff -urNad newt-0.52.16-orig/tutorial.sgml newt-0.52.16/tutorial.sgml
  </article>
  
 # See https://gitweb.gentoo.org/repo/gentoo.git/tree/dev-libs/newt/files/newt-0.52.14-tcl.patch
-diff -urNad newt-0.52.16-orig/whiptcl.c newt-0.52.16/whiptcl.c
---- newt-0.52.16-orig/whiptcl.c	2013-08-06 18:46:42.000000000 +0300
-+++ newt-0.52.16/whiptcl.c	2016-10-31 13:57:37.000000000 +0200
+diff -urNad newt-0.52.18-orig/whiptcl.c newt-0.52.18/whiptcl.c
+--- newt-0.52.18-orig/whiptcl.c	2014-10-23 11:34:37.000000000 +0300
++++ newt-0.52.18/whiptcl.c	2016-10-31 14:58:28.000000000 +0200
 @@ -137,45 +137,45 @@
      
      if (arg < -1) {
