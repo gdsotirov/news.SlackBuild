@@ -4,7 +4,7 @@
 # Written by Georgi D. Sotirov <gdsotirov@dir.bg>
 #
 
-. ../slack-package.conf
+. ../../slack-package.conf
 
 NAME=newt
 VERSION=0.52.10
@@ -47,6 +47,7 @@ CFLAGS=$SLKCFLAGS \
 CXXFLAGS=$SLKCFLAGS  \
 ./configure --build=$ARCH-pc-linux-gnu \
             --prefix=/usr \
+            --libdir=/usr/lib${LIBDIRSUFFIX} \
             --sysconfdir=/etc \
             --localstatedir=/var \
             --mandir=/usr/man \
