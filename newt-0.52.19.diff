@@ -1,7 +1,7 @@
 # Patch to add whiptcl.so to all target, fix TCL result string, use -fPIC for snackmodule and fix linuxdoc tutorial
-diff -urNad newt-0.52.18-orig/Makefile.in newt-0.52.18/Makefile.in
---- newt-0.52.18-orig/Makefile.in	2014-10-23 11:34:37.000000000 +0300
-+++ newt-0.52.18/Makefile.in	2016-10-31 14:59:57.000000000 +0200
+diff -urNad newt-0.52.19-orig/Makefile.in newt-0.52.19/Makefile.in
+--- newt-0.52.19-orig/Makefile.in	2016-03-23 17:46:24.000000000 +0200
++++ newt-0.52.19/Makefile.in	2016-10-31 20:56:53.000000000 +0200
 @@ -65,7 +65,7 @@
  TARGET=depend $(PROGS)
  endif
@@ -23,9 +23,9 @@ diff -urNad newt-0.52.18-orig/Makefile.in newt-0.52.18/Makefile.in
  	done || :
  	touch $@
  
-diff -urNad newt-0.52.18-orig/tutorial.sgml newt-0.52.18/tutorial.sgml
---- newt-0.52.18-orig/tutorial.sgml	2014-10-23 11:34:37.000000000 +0300
-+++ newt-0.52.18/tutorial.sgml	2016-10-31 14:58:28.000000000 +0200
+diff -urNad newt-0.52.19-orig/tutorial.sgml newt-0.52.19/tutorial.sgml
+--- newt-0.52.19-orig/tutorial.sgml	2016-03-23 17:46:24.000000000 +0200
++++ newt-0.52.19/tutorial.sgml	2016-10-31 20:56:53.000000000 +0200
 @@ -1,124 +1,116 @@
 -<!DOCTYPE Article PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
 +<!doctype linuxdoc system>
@@ -1917,9 +1917,9 @@ diff -urNad newt-0.52.18-orig/tutorial.sgml newt-0.52.18/tutorial.sgml
  </article>
  
 # See https://gitweb.gentoo.org/repo/gentoo.git/tree/dev-libs/newt/files/newt-0.52.14-tcl.patch
-diff -urNad newt-0.52.18-orig/whiptcl.c newt-0.52.18/whiptcl.c
---- newt-0.52.18-orig/whiptcl.c	2014-10-23 11:34:37.000000000 +0300
-+++ newt-0.52.18/whiptcl.c	2016-10-31 14:58:28.000000000 +0200
+diff -urNad newt-0.52.19-orig/whiptcl.c newt-0.52.19/whiptcl.c
+--- newt-0.52.19-orig/whiptcl.c	2016-03-23 17:46:24.000000000 +0200
++++ newt-0.52.19/whiptcl.c	2016-10-31 20:56:53.000000000 +0200
 @@ -137,45 +137,45 @@
      
      if (arg < -1) {
