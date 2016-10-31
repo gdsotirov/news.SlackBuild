@@ -19,13 +19,13 @@
 #
 # Visit SlackPack at http://sotirov-bg.net/slackpack/
 #
-# $Id: newt.SlackBuild,v 1.6 2016/10/31 12:27:26 gsotirov Exp $
+# $Id: newt.SlackBuild,v 1.7 2016/10/31 13:14:52 gsotirov Exp $
 #
 
 . ../../slack-package.conf
 
 NAME=newt
-VERSION=0.52.16
+VERSION=0.52.18
 ARCH=${ARCH:-i486}
 BUILD=${BUILD:-1}
 
@@ -37,13 +37,13 @@ if [ ! -e $TMP ]; then
   mkdir -p $TMP # location to build the source
 fi
 
-SRC=$TMP/$NAME-$VERSION
+SRC=$TMP/${NAME}-${VERSION}
 if [ -e $SRC -a -d $SRC ]; then
   echo "Source directory '$SRC' already exists! Plaese, move it or remove it."
   exit 1
 fi
 
-PKG=$TMP/package-$NAME
+PKG=$TMP/package-${NAME}
 if [ -e $PKG -a -d $PKG ]; then
   echo "Package creation directory '$PKG' already exists! Please, move it or remove it."
   exit 2
@@ -52,18 +52,18 @@ mkdir -p $PKG
 
 # Extract source
 cd $TMP
-tar -xvf $CWD/$NAME-$VERSION.tar.gz || exit 3
+tar -xvf $CWD/${NAME}-${VERSION}.tar.gz || exit 3
 cd $SRC
 fix_source
 
 # Apply patches
-if [ -e $CWD/$NAME-$VERSION.diff ]; then
-  patch -p1 -b -z.orig < $CWD/$NAME-$VERSION.diff || exit 4
+if [ -e $CWD/${NAME}-${VERSION}.diff ]; then
+  patch -p1 -b -z.orig < $CWD/${NAME}-${VERSION}.diff || exit 4
 fi
 
-CFLAGS=$SLKCFLAGS \
-CXXFLAGS=$SLKCFLAGS  \
-./configure --build=$ARCH-pc-linux-gnu \
+CFLAGS="$SLKCFLAGS" \
+CXXFLAGS="$SLKCFLAGS" \
+./configure --build=${ARCH}-pc-linux-gnu \
             --prefix=/usr \
             --libdir=/usr/lib${LIBDIRSUFFIX} \
             --sysconfdir=/etc \
@@ -73,43 +73,48 @@ CXXFLAGS=$SLKCFLAGS  \
 
 # Build & install
 make -j4 || exit 6
-linuxdoc -B html tutorial.sgml || exit 7
 make instroot=$PKG install || exit 8
+# - remove static library
+( cd $PKG/usr/lib${LIBDIRSUFFIX}; rm -f lib${NAME}.a )
+# - make and install tutorial
+linuxdoc -B html tutorial.sgml || exit 7
+DOCSDIR=$PKG/usr/doc/${NAME}-${VERSION}
+install -m 755 -d ${DOCSDIR}
+install -m 644 $SRC/tutorial*.html ${DOCSDIR}/
+# - install examples
+# - install examples
+install -m 755 -d ${DOCSDIR}/examples
+install -m 644 $SRC/peanuts.py     ${DOCSDIR}/examples/peanuts.py
+install -m 644 $SRC/popcorn.py     ${DOCSDIR}/examples/popcorn.py
 
 # Prepare
 bin_perms $PKG
 ( cd $PKG; strip_bin; strip_lib )
+( cd $SRC; create_docs $PKG ${NAME}-${VERSION} )
 gzip_man $PKG
-( cd $SRC; create_docs $PKG $NAME-$VERSION )
-# - make tutorial
-install -m 644 $SRC/tutorial*.html $PKG/usr/doc/$NAME-$VERSION
-# - Install examples
-install -m 755 -d $PKG/usr/doc/$NAME-$VERSION/examples
-install -m 644 $SRC/peanuts.py     $PKG/usr/doc/$NAME-$VERSION/examples/peanuts.py
-install -m 644 $SRC/popcorn.py     $PKG/usr/doc/$NAME-$VERSION/examples/popcorn.py
 
 mkdir -p $PKG/install
 install -m 644 $CWD/slack-desc     $PKG/install/slack-desc
 install -m 644 $CWD/slack-required $PKG/install/slack-required
 install -m 644 $CWD/slack-suggests $PKG/install/slack-suggests
 
-SBDIR=$PKG/usr/src/slackbuilds/$NAME-$VERSION
+SBDIR=$PKG/usr/src/slackbuilds/${NAME}-${VERSION}
 mkdir -p $SBDIR
 install -m 644 $CWD/slack-desc                $SBDIR/slack-desc
 install -m 644 $CWD/slack-required            $SBDIR/slack-required
 install -m 644 $CWD/slack-suggests            $SBDIR/slack-suggests
-if [ -e $CWD/$NAME-$VERSION.diff ]; then
-  install -m 644 $CWD/${NAME}-${VERSION}*.diff $SBDIR
+if [ -e $CWD/${NAME}-${VERSION}.diff ]; then
+  install -m 644 $CWD/${NAME}-${VERSION}.diff $SBDIR/${NAME}-${VERSION}.diff
 fi
-install -m 644 $CWD/$NAME.SlackBuild          $SBDIR/$NAME.SlackBuild
+install -m 644 $CWD/${NAME}.SlackBuild        $SBDIR/${NAME}.SlackBuild
 
 # Assemble
 cd $PKG
-PKGNAME=$NAME-$VERSION-$ARCH-$BUILD$MYIN
-makepkg -l y -c n $PKG_DIR/$PKGNAME.txz
+PKGNAME=${NAME}-${VERSION}-${ARCH}-${BUILD}${MYIN}
+makepkg -l y -c n $PKG_DIR/${PKGNAME}.txz
 cd $PKG_DIR
-md5sum $PKGNAME.txz > $PKGNAME.txz.md5
-cat $PKG/install/slack-desc > $PKG_DIR/$PKGNAME.txt
+md5sum ${PKGNAME}.txz > ${PKGNAME}.txz.md5
+cat $PKG/install/slack-desc > $PKG_DIR/${PKGNAME}.txt
 
 # Clean up (optionally)
 if [ "$1" == "--cleanup" ]; then
