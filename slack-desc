@@ -8,4 +8,4 @@ newt: shared library needed by programs built with newt, as well as a
 newt: /usr/bin/dialog replacement called whiptail.
 newt: Newt is based on the S-Lang library.
 newt:
-newt: Packaged by Georgi D. Sotirov <gdsotirov@dir.bg>
+newt: Packaged by Georgi D. Sotirov <gdsotirov@gmail.com>
